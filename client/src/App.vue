@@ -6,6 +6,22 @@ import { ref } from "vue";
 const textInput = ref("");
 const todos = ref<TODOItem[]>([]);
 
+fetch("/api/todos", {
+  method: "GET",
+})
+  .then((res) => res.json())
+  .then((data) => (todos.value = data));
+
+function postTodos() {
+  fetch("/api/todos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todos.value),
+  });
+}
+
 function addTodo() {
   if (!textInput.value) return;
   todos.value.push({
@@ -14,17 +30,21 @@ function addTodo() {
     done: false,
   });
   textInput.value = "";
+  postTodos();
 }
 function toggleTodo(id: number) {
   const todo = todos.value.find((todo) => todo.id === id);
   if (!todo) return;
   todo.done = !todo.done;
+  postTodos();
 }
 function removeTodo(id: number) {
   todos.value = todos.value.filter((todo) => todo.id !== id);
+  postTodos();
 }
 function clear() {
   todos.value = todos.value.filter((todo) => todo.done === false);
+  postTodos();
 }
 </script>
 

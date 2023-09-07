@@ -14,6 +14,7 @@ const emit = defineEmits(["toggle", "remove"]);
       {{ item.done ? "✅" : "⬜" }}
       {{ item.text }}
     </span>
+    <!-- <input type="checkbock" id="checkbox" :checked="true" /> -->
     <button @click="emit('remove', item.id)">🗑️</button>
   </div>
 </template>
