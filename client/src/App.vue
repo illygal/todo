@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { TODOItem } from "./types";
-import Item from "./components/Item.vue";
 import { ref } from "vue";
+import List from "./components/List.vue";
+import Graph from "./components/Graph.vue";
 
-const textInput = ref("");
+const view = ref<"list" | "graph">("list");
 const todos = ref<TODOItem[]>([]);
 
 fetch("/api/todos", {
@@ -11,6 +12,11 @@ fetch("/api/todos", {
 })
   .then((res) => res.json())
   .then((data) => (todos.value = data));
+
+const ws = new WebSocket(`ws://${location.host}/`);
+ws.onmessage = (event) => {
+  todos.value = JSON.parse(event.data);
+};
 
 function postTodos() {
   fetch("/api/todos", {
@@ -21,24 +27,17 @@ function postTodos() {
     body: JSON.stringify(todos.value),
   });
 }
-
-function addTodo() {
-  if (!textInput.value) return;
-  todos.value.push({
-    id: Math.random(),
-    text: textInput.value,
-    done: false,
-  });
-  textInput.value = "";
+function add(todo: TODOItem) {
+  todos.value.push(todo);
   postTodos();
 }
-function toggleTodo(id: number) {
+function toggle(id: number) {
   const todo = todos.value.find((todo) => todo.id === id);
   if (!todo) return;
   todo.done = !todo.done;
   postTodos();
 }
-function removeTodo(id: number) {
+function remove(id: number) {
   todos.value = todos.value.filter((todo) => todo.id !== id);
   postTodos();
 }
@@ -49,15 +48,17 @@ function clear() {
 </script>
 
 <template>
-  <h1>TODO</h1>
-  <Item
-    v-for="todo in todos"
-    :key="todo.id"
-    :item="todo"
-    @toggle="toggleTodo"
-    @remove="removeTodo"
+  <div style="position: absolute; top: 15px; right: 15px; z-index: 1000">
+    <button @click="() => (view = 'list')">List</button>
+    <button @click="() => (view = 'graph')">Graph</button>
+  </div>
+  <List
+    v-if="view == 'list'"
+    :todos="todos"
+    @add="add"
+    @toggle="toggle"
+    @remove="remove"
+    @clear="clear"
   />
-  <input v-model="textInput" autofocus @keyup.enter="addTodo" />
-  <button @click="addTodo">Add</button>
-  <button @click="clear">Clear</button>
+  <Graph v-if="view == 'graph'" :todos="todos" />
 </template>
