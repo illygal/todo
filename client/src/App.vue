@@ -4,7 +4,7 @@ import { ref } from "vue";
 import List from "./components/List.vue";
 import Graph from "./components/Graph.vue";
 
-const view = ref<"list" | "graph">("list");
+const view = ref<"list" | "graph">("graph");
 const todos = ref<TODOItem[]>([]);
 
 fetch("/api/todos", {
@@ -13,7 +13,7 @@ fetch("/api/todos", {
   .then((res) => res.json())
   .then((data) => (todos.value = data));
 
-const ws = new WebSocket(`ws://${location.host}/`);
+const ws = new WebSocket("ws://${location.host}/");
 ws.onmessage = (event) => {
   todos.value = JSON.parse(event.data);
 };
@@ -60,5 +60,5 @@ function clear() {
     @remove="remove"
     @clear="clear"
   />
-  <Graph v-if="view == 'graph'" :todos="todos" />
+  <Graph v-if="view == 'graph'" :todos="todos" @toggle="toggle" />
 </template>
