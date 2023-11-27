@@ -6,17 +6,17 @@ import "@livereader/graphly-d3/style.css";
 import { ForceSimulation, Graph, Node } from "@livereader/graphly-d3";
 import Anchor from "../templates/anchor";
 import Checkmark from "../templates/checkmark";
-import Weather from "../templates/weather";
+import Weather, { type Schema as WeatherSchema } from "../templates/weather";
 
 const emit = defineEmits(["toggle"]);
 const props = defineProps<{ todos: TODOItem[] }>();
 const graphly = ref<typeof GraphlyD3>({} as typeof GraphlyD3);
 // const graphly = ref<ForceSimulation>({} as ForceSimulation);
 const simulation = computed<ForceSimulation>(() => graphly.value.simulation);
-const temperature = ref(0);
+const temperature = ref("0");
 const daytime = ref("day");
 const modi = ref("light");
-const weathertype = ref("sunny");
+const weathertype = ref<"clear" | "cloudy" | "rainy">("clear");
 // watch(
 //   () => temperature.value,
 //   () => renderGraph()
@@ -83,25 +83,23 @@ function renderGraph() {
         type: "weather",
         scale: 5,
       },
-      x: 0,
+      x: 400,
       y: 400,
       anchor: {
         type: "soft",
-        x: 0,
+        x: 400,
         y: 400,
       },
       payload: {
         title: "Birkenfeld",
-        color: "#000000",
-        ldMode: modi.value === "light",
-        weatherday: daytime.value === "day",
-        temp: temperature.value,
+        isDay: daytime.value === "day",
+        temp: parseFloat(temperature.value),
         weathertype: weathertype.value,
         time: new Date().toLocaleTimeString("de", {
           hour: "2-digit",
           minute: "2-digit",
         }),
-      },
+      } as WeatherSchema,
     },
   ];
   props.todos.forEach((todo) => {
@@ -208,15 +206,14 @@ watch(
 
 function changeMode(currMod: "light" | "dark") {
   modi.value = currMod;
-  renderGraph();
 }
 
 function changeDay(timeOfDay: "day" | "night") {
-  modi.value = timeOfDay;
+  daytime.value = timeOfDay;
   renderGraph();
 }
 
-function changeWeatherType(weather: "sunny" | "rainy" | "cloudy") {
+function changeWeatherType(weather: "clear" | "rainy" | "cloudy") {
   weathertype.value = weather;
   renderGraph();
 }
@@ -281,7 +278,7 @@ function changeWeatherType(weather: "sunny" | "rainy" | "cloudy") {
     </div>
     <div>
       <button id="cloudy" @click="changeWeatherType('cloudy')">☁️</button>
-      <button id="sunny" @click="changeWeatherType('sunny')">☀️</button>
+      <button id="sunny" @click="changeWeatherType('clear')">☀️</button>
       <button id="rainy" @click="changeWeatherType('rainy')">🌧️</button>
     </div>
     <div>
@@ -292,6 +289,7 @@ function changeWeatherType(weather: "sunny" | "rainy" | "cloudy") {
   <GraphlyD3
     ref="graphly"
     class="graphly-canvas"
+    :dark="modi === 'dark'"
     :env-gravity="0"
     @node-click="nodeClick"
     @node-drag-end="nodeDragEnd"
@@ -300,17 +298,6 @@ function changeWeatherType(weather: "sunny" | "rainy" | "cloudy") {
 </template>
 
 <style>
-:root {
-  --sun-color: #ffe65c;
-  --sun-color-rgba: rgb(255, 230, 92);
-  --card-sunny: #ffa333;
-  --moon-night: #2f3475;
-  --moon: #ffe646;
-  --moon-wave: rgb(79, 85, 148);
-  --snow-day: #1ec9ed;
-  --foreground-mountain: #82dff9;
-  --background-mountain: #00b4d8;
-}
 .ss1,
 .ss2 {
   animation: sun-rays 4s infinite;
@@ -326,4 +313,18 @@ function changeWeatherType(weather: "sunny" | "rainy" | "cloudy") {
     r: 10px;
   }
 }
+
+.cloud {
+  animation: cloud-rays 4s infinite;
+}
+
+/* @keyframes {
+  0% {
+    
+  }
+  50% {
+  }
+  100% {
+  }
+} */
 </style>
