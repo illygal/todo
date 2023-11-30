@@ -16,7 +16,9 @@ const simulation = computed<ForceSimulation>(() => graphly.value.simulation);
 const temperature = ref("0");
 const daytime = ref("day");
 const modi = ref("light");
-const weathertype = ref<"clear" | "cloudy" | "rainy">("clear");
+const weathertype = ref<"clear" | "cloudy" | "rainy" | "snowy" | "windy">(
+  "clear"
+);
 // watch(
 //   () => temperature.value,
 //   () => renderGraph()
@@ -213,7 +215,9 @@ function changeDay(timeOfDay: "day" | "night") {
   renderGraph();
 }
 
-function changeWeatherType(weather: "clear" | "rainy" | "cloudy") {
+function changeWeatherType(
+  weather: "clear" | "rainy" | "cloudy" | "snowy" | "windy"
+) {
   weathertype.value = weather;
   renderGraph();
 }
@@ -270,8 +274,7 @@ function changeWeatherType(weather: "clear" | "rainy" | "cloudy") {
       id="temp"
       name="Temperatur"
       min="-20"
-      max="60"
-    />
+      max="60" />
     <div>
       <button id="light" @click="changeMode('light')">Light</button>
       <button id="dark" @click="changeMode('dark')">Dark</button>
@@ -280,6 +283,8 @@ function changeWeatherType(weather: "clear" | "rainy" | "cloudy") {
       <button id="cloudy" @click="changeWeatherType('cloudy')">☁️</button>
       <button id="sunny" @click="changeWeatherType('clear')">☀️</button>
       <button id="rainy" @click="changeWeatherType('rainy')">🌧️</button>
+      <button id="rainy" @click="changeWeatherType('snowy')">🌨️</button>
+      <button id="rainy" @click="changeWeatherType('windy')">💨</button>
     </div>
     <div>
       <button id="day" @click="changeDay('day')">Tag</button>
@@ -293,8 +298,7 @@ function changeWeatherType(weather: "clear" | "rainy" | "cloudy") {
     :env-gravity="0"
     @node-click="nodeClick"
     @node-drag-end="nodeDragEnd"
-    @simulation-tick="handleTick"
-  />
+    @simulation-tick="handleTick" />
 </template>
 
 <style>
