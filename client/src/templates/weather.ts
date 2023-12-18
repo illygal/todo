@@ -77,36 +77,36 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   }
 
   const shape = TAPI.SVGShape(`
-  <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-  <g transform="matrix(0.928357,0,0,0.928357,3.58213,3.58213)">
-      <circle cx="50" cy="50" r="50" style="fill:white;stroke:black;stroke-width:1.08px;"/>
+    <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
+    <g transform="matrix(0.928357,0,0,0.928357,3.58213,3.58213)">
+        <circle cx="50" cy="50" r="50" style="fill:white;stroke:black;stroke-width:1.08px;"/>
+    </g>
+    <g transform="matrix(0.932288,0,0,0.903258,22.5523,-4.29759)">
+        <clipPath id="test123">
+            <rect x="-20.311" y="9.649" width="98.387" height="49.838"/>
+        </clipPath>
+        <g clip-path="url(#test123)">
+            <circle cx="29.41" cy="58.614" r="46.629" style="fill:${color};fill-opacity:1;"/>
+        </g>
+    </g>
+    <g transform="matrix(0.932288,0,0,-0.903258,22.4873,103.982)">
+        <clipPath id="test456">
+            <rect x="-20.311" y="9.649" width="98.387" height="49.838"/>
+        </clipPath>
+        <g clip-path="url(#test456)">
+            <circle id="light" cx="29.41" cy="58.614" r="46.629" style="fill-opacity:1;"/>
+        </g>
+    </g>
+    <g transform="matrix(1.01995,0,0,0.523139,-1.49531,32.2924)">
+        <clipPath id="test789">
+            <rect x="7.839" y="32.767" width="85.242" height="2.163"/>
+        </clipPath>
+        <g clip-path="url(#test789)">
+            <rect x="6.473" y="33.018" width="88.002" height="2.098" style="stroke:black;stroke-width:0.77px;"/>
+        </g>
+    </g>
   </g>
-  <g transform="matrix(0.932288,0,0,0.903258,22.5523,-4.29759)">
-      <clipPath id="_clip1">
-          <rect x="-20.311" y="9.649" width="98.387" height="49.838"/>
-      </clipPath>
-      <g clip-path="url(#_clip1)">
-          <circle cx="29.41" cy="58.614" r="46.629" style="fill:${color};fill-opacity:1;"/>
-      </g>
-  </g>
-  <g transform="matrix(0.932288,0,0,-0.903258,22.4873,103.982)">
-      <clipPath id="_clip2">
-          <rect x="-20.311" y="9.649" width="98.387" height="49.838"/>
-      </clipPath>
-      <g clip-path="url(#_clip2)">
-          <circle id="light" cx="29.41" cy="58.614" r="46.629" style="fill-opacity:1;"/>
-      </g>
-  </g>
-  <g transform="matrix(1.01995,0,0,0.523139,-1.49531,32.2924)">
-      <clipPath id="_clip3">
-          <rect x="7.839" y="32.767" width="85.242" height="2.163"/>
-      </clipPath>
-      <g clip-path="url(#_clip3)">
-          <rect x="6.473" y="33.018" width="88.002" height="2.098" style="stroke:black;stroke-width:0.77px;"/>
-      </g>
-  </g>
-</g>
-`);
+  `);
 
   const cloudy = TAPI.SVGShape(`
   <g transform="translate(28,69.5)">
@@ -128,10 +128,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const sun = TAPI.SVGShape(`
     <g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
     <g transform="matrix(1,0,0,1,-0.692585,9.18229)">
-        <clipPath id="_clip1">
+        <clipPath id="sun1">
             <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
             </clipPath>
-            <g clip-path="url(#_clip1)">
+            <g clip-path="url(#sun1)">
             <circle class="sun" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe65c;fill-opacity:1;stroke:none;"/>
             </g>
             </g>
@@ -140,10 +140,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const sunShadow1 = TAPI.SVGShape(`
             <g transform="matrix(1,0,0,1,-1.9982,-3.1145)">
   <g transform="matrix(2.7927,0,0,2.7927,-92.0894,-64.5575)">
-      <clipPath id="_clip1">
+      <clipPath id="sunshadow1">
       <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
       </clipPath>
-      <g clip-path="url(#_clip1)">
+      <g clip-path="url(#sunshadow1)">
           <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:rgb(255, 198, 102);fill-opacity:1; stroke:none;"/>
       </g>
   </g>
@@ -152,10 +152,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const sunShadow2 = TAPI.SVGShape(`
   <g transform="matrix(1,0,0,1,-2.4057,-3.0469)">
         <g transform="matrix(3.57224,0,0,3.57224,-131.086,-96.3764)">
-            <clipPath id="_clip1">
+            <clipPath id="sunshadow21">
                 <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
             </clipPath>
-            <g clip-path="url(#_clip1)">
+            <g clip-path="url(#sunshadow21)">
                 <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:rgb(255, 177, 77);fill-opacity:1;stroke:none;"/>
             </g>
         </g>
@@ -167,10 +167,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const moon = TAPI.SVGShape(`
     <g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
     <g transform="matrix(1,0,0,1,-0.692585,9.18229)">
-        <clipPath id="_clip1">
+        <clipPath id="moon1">
             <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
             </clipPath>
-            <g clip-path="url(#_clip1)">
+            <g clip-path="url(#moon1)">
             <circle class="sun" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
             </g>
             </g>
@@ -179,10 +179,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const moonShadow1 = TAPI.SVGShape(`
             <g transform="matrix(1,0,0,1,-1.9982,-3.1145)">
   <g transform="matrix(2.7927,0,0,2.7927,-92.0894,-64.5575)">
-      <clipPath id="_clip1">
+      <clipPath id="moonshadow1">
       <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
       </clipPath>
-      <g clip-path="url(#_clip1)">
+      <g clip-path="url(#moonshadow1)">
           <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:rgb(79, 85, 148);fill-opacity:1; stroke:none;"/>
       </g>
   </g>
@@ -191,10 +191,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const moonShadow2 = TAPI.SVGShape(`
   <g transform="matrix(1,0,0,1,-2.4057,-3.0469)">
         <g transform="matrix(3.57224,0,0,3.57224,-131.086,-96.3764)">
-            <clipPath id="_clip1">
+            <clipPath id="moonshadow21">
                 <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
             </clipPath>
-            <g clip-path="url(#_clip1)">
+            <g clip-path="url(#moonshadow21)">
                 <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:rgb(65, 73, 137);fill-opacity:1;stroke:none;"/>
             </g>
         </g>
@@ -232,26 +232,26 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const cloud = TAPI.SVGShape(`
     <g transform="matrix(1,0,0,1,-3.6256,12.4724)">
     <g transform="matrix(1.18637,0,0,1.18637,-32.16,-17.1965)">
-        <clipPath id="_clip1">
+        <clipPath id="cloud1">
             <rect x="41.568" y="31.751" width="18.249" height="9.066"/>
         </clipPath>
-        <g clip-path="url(#_clip1)">
+        <g clip-path="url(#cloud1)">
             <circle class="cloud" cx="50.693" cy="40.876" r="9.124" style="fill:#F0F0F0;;fill-opacity:0.69;stroke:none;"/>
         </g>
     </g>
     <g transform="matrix(0.960979,0,0,0.960979,-11.9659,-7.99643)">
-        <clipPath id="_clip2">
+        <clipPath id="cloud2">
             <rect x="41.568" y="31.751" width="18.249" height="9.066"/>
         </clipPath>
-        <g clip-path="url(#_clip2)">
+        <g clip-path="url(#cloud2)">
             <circle class="cloud" cx="50.693" cy="40.876" r="9.124" style="fill:#F0F0F0;;fill-opacity:0.64;stroke:none;"/>
         </g>
     </g>
     <g transform="matrix(0.731823,0,0,0.731823,-15.795,1.3572)">
-        <clipPath id="_clip3">
+        <clipPath id="cloud3">
             <rect x="41.568" y="31.751" width="18.249" height="9.066"/>
         </clipPath>
-        <g clip-path="url(#_clip3)">
+        <g clip-path="url(#cloud3)">
             <circle class="cloud" cx="50.693" cy="40.876" r="9.124" style="fill:#F0F0F0;;stroke:none;"/>
         </g>
     </g>
@@ -261,26 +261,26 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
   const cloud2 = TAPI.SVGShape(`
 <g transform="matrix(1,0,0,1,10.6977,6.9053)">
 <g transform="matrix(0.944936,0,0,0.944936,0.43338,-18.0977)">
-    <clipPath id="_clip1">
+    <clipPath id="cloud21">
         <rect x="41.568" y="31.751" width="18.249" height="9.066"/>
     </clipPath>
-    <g clip-path="url(#_clip1)">
+    <g clip-path="url(#cloud21)">
         <circle cx="50.693" cy="40.876" r="9.124" style="fill:#F0F0F0;;stroke:none;;fill-opacity:0.69;"/>
     </g>
 </g>
 <g transform="matrix(0.765411,0,0,0.765411,16.5178,-10.7699)">
-    <clipPath id="_clip2">
+    <clipPath id="cloud22">
         <rect x="41.568" y="31.751" width="18.249" height="9.066"/>
     </clipPath>
-    <g clip-path="url(#_clip2)">
+    <g clip-path="url(#cloud22)">
         <circle cx="50.693" cy="40.876" r="9.124" style="fill:#F0F0F0;stroke:none;fill-opacity:0.64;"/>
     </g>
 </g>
 <g transform="matrix(0.58289,0,0,0.58289,13.4679,-3.31981)">
-    <clipPath id="_clip3">
+    <clipPath id="cloud32">
         <rect x="41.568" y="31.751" width="18.249" height="9.066"/>
     </clipPath>
-    <g clip-path="url(#_clip3)">
+    <g clip-path="url(#cloud32)">
         <circle cx="50.693" cy="40.876" r="9.124" style="fill:#F0F0F0;;stroke:none;"/>
     </g>
 </g>
@@ -290,10 +290,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
     TAPI.SVGShape(` <g transform="matrix(1,0,0,1,14.6977,17.9053)">
 <g transform="matrix(1,0,0,1,-37.6977,-11.9053)">
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip1">
+        <clipPath id="raindrop1">
             <rect x="42.796" y="14.988" width="17.243" height="9.371"/>
         </clipPath>
-        <g clip-path="url(#_clip1)">
+        <g clip-path="url(#raindrop1)">
             <g transform="matrix(0.944936,0,0,0.944936,3.51551,-15.0155)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.69;stroke: none;"/>
@@ -302,10 +302,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip2">
+        <clipPath id="raindrop2">
             <rect x="51.417" y="16.616" width="13.967" height="7.744"/>
         </clipPath>
-        <g clip-path="url(#_clip2)">
+        <g clip-path="url(#raindrop2)">
             <g transform="matrix(0.765411,0,0,0.765411,19.5999,-7.68776)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.64;stroke: none;"/>
@@ -314,10 +314,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip3">
+        <clipPath id="raindrop3">
             <rect x="40.78" y="18.27" width="10.637" height="6.078"/>
         </clipPath>
-        <g clip-path="url(#_clip3)">
+        <g clip-path="url(#raindrop3)">
             <g transform="matrix(0.58289,0,0,0.58289,16.55,-0.237677)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};stroke: none;"/>
@@ -344,10 +344,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
     TAPI.SVGShape(` <g transform="matrix(1,0,0,1,53.6977,17.9053)">
 <g transform="matrix(1,0,0,1,-37.6977,-11.9053)">
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip1">
+        <clipPath id="raindrop21">
             <rect x="42.796" y="14.988" width="17.243" height="9.371"/>
         </clipPath>
-        <g clip-path="url(#_clip1)">
+        <g clip-path="url(#raindrop21)">
             <g transform="matrix(0.944936,0,0,0.944936,3.51551,-15.0155)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.69;stroke: none;"/>
@@ -356,10 +356,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip2">
+        <clipPath id="raindrop22">
             <rect x="51.417" y="16.616" width="13.967" height="7.744"/>
         </clipPath>
-        <g clip-path="url(#_clip2)">
+        <g clip-path="url(#raindrop22)">
             <g transform="matrix(0.765411,0,0,0.765411,19.5999,-7.68776)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.64;stroke: none;"/>
@@ -368,10 +368,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip3">
+        <clipPath id="raindrop23">
             <rect x="40.78" y="18.27" width="10.637" height="6.078"/>
         </clipPath>
-        <g clip-path="url(#_clip3)">
+        <g clip-path="url(#raindrop23)">
             <g transform="matrix(0.58289,0,0,0.58289,16.55,-0.237677)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};stroke: none;"/>
@@ -451,10 +451,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
 <g transform="matrix(1,0,0,1,15.00032441,17.000677872)">
 <g transform="matrix(1,0,0,1,-37.6977,-11.9053)">
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip1">
+        <clipPath id="windy1">
             <rect x="42.796" y="14.988" width="17.243" height="9.371"/>
         </clipPath>
-        <g clip-path="url(#_clip1)">
+        <g clip-path="url(#windy1)">
             <g transform="matrix(0.944936,0,0,0.944936,3.51551,-15.0155)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.69;stroke: none;"/>
@@ -463,10 +463,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip2">
+        <clipPath id="windy2">
             <rect x="51.417" y="16.616" width="13.967" height="7.744"/>
         </clipPath>
-        <g clip-path="url(#_clip2)">
+        <g clip-path="url(#windy2)">
             <g transform="matrix(0.765411,0,0,0.765411,19.5999,-7.68776)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.64;stroke: none;"/>
@@ -475,10 +475,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip3">
+        <clipPath id="windy3">
             <rect x="40.78" y="18.27" width="10.637" height="6.078"/>
         </clipPath>
-        <g clip-path="url(#_clip3)">
+        <g clip-path="url(#windy3)">
             <g transform="matrix(0.58289,0,0,0.58289,16.55,-0.237677)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};stroke: none;"/>
@@ -505,10 +505,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
 <g transform="matrix(1,0,0,1,55.00032441,25.000677872)">
 <g transform="matrix(1,0,0,1,-37.6977,-11.9053)">
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip1">
+        <clipPath id="windy21">
             <rect x="42.796" y="14.988" width="17.243" height="9.371"/>
         </clipPath>
-        <g clip-path="url(#_clip1)">
+        <g clip-path="url(#windy21)">
             <g transform="matrix(0.944936,0,0,0.944936,3.51551,-15.0155)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.69;stroke: none;"/>
@@ -517,10 +517,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip2">
+        <clipPath id="windy22">
             <rect x="51.417" y="16.616" width="13.967" height="7.744"/>
         </clipPath>
-        <g clip-path="url(#_clip2)">
+        <g clip-path="url(#windy22)">
             <g transform="matrix(0.765411,0,0,0.765411,19.5999,-7.68776)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};fill-opacity:0.64;stroke: none;"/>
@@ -529,10 +529,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
-        <clipPath id="_clip3">
+        <clipPath id="windy23">
             <rect x="40.78" y="18.27" width="10.637" height="6.078"/>
         </clipPath>
-        <g clip-path="url(#_clip3)">
+        <g clip-path="url(#windy23)">
             <g transform="matrix(0.58289,0,0,0.58289,16.55,-0.237677)">
                 <g>
                     <circle cx="50.693" cy="40.876" r="9.124" style="fill:${raincloudCol};stroke: none;"/>
@@ -597,30 +597,30 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
 
   if (data.payload?.isDay) {
     if (data.payload?.weathertype === "clear") {
-      shape.append(() => sunny.node());
       shape.append(() => sunShadow2.node());
       shape.append(() => sunShadow1.node());
       shape.append(() => sun.node());
+      shape.append(() => sunny.node());
     } else if (data.payload?.weathertype === "rainy") {
-      shape.append(() => rainy.node());
       shape.append(() => sunShadow2.node());
       shape.append(() => sunShadow1.node());
       shape.append(() => sun.node());
       shape.append(() => rainDrops.node());
       shape.append(() => rainDrops2.node());
+      shape.append(() => rainy.node());
     } else if (data.payload?.weathertype === "cloudy") {
-      shape.append(() => cloudy.node());
       shape.append(() => sunShadow2.node());
       shape.append(() => sunShadow1.node());
       shape.append(() => sun.node());
       shape.append(() => cloud.node());
       shape.append(() => cloud2.node());
+      shape.append(() => cloudy.node());
     } else if (data.payload?.weathertype === "snowy") {
-      shape.append(() => snowy.node());
       shape.append(() => sunShadow2.node());
       shape.append(() => sunShadow1.node());
       shape.append(() => sun.node());
       shape.append(() => snow.node());
+      shape.append(() => snowy.node());
     } else if (data.payload.weathertype === "windy") {
       shape.append(() => windy.node());
       shape.append(() => sunShadow2.node());
