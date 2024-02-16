@@ -1,0 +1,10 @@
+{
+  "triples": [
+    { "subject": "Apple", "relation": "is", "object": "Company" },
+    { "subject": "Apple", "relation": "created", "object": "iMac" },
+    { "subject": "Apple", "relation": "created", "object": "iPhone" },
+    { "subject": "iPhone", "relation": "announced in", "object": "2007" },
+    { "subject": "iMac", "relation": "announced in", "object": "1998" },
+    { "subject": "Vision Pro", "relation": "announced in", "object": "2023" }
+  ]
+}
