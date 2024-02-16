@@ -2,9 +2,16 @@ import type { Node, TemplateAPI } from "@livereader/graphly-d3";
 
 export type Schema = {
   title: string;
-  isDay: boolean;
+  daytype: "day" | "night" | "dawn" | "grey" | "blue" | "custom";
   temp: number;
+  size: number;
   weathertype: "clear" | "cloudy" | "rainy" | "snowy" | "windy";
+  ringColor: {
+    outer: string;
+    middle: string;
+    inner: string;
+  };
+  timeColor: string;
   time: string;
 };
 
@@ -12,69 +19,110 @@ const schema = {
   type: "object",
   properties: {
     title: { type: "string" },
-    isDay: { type: "boolean" },
+    daytype: {
+      type: "string",
+      enum: ["day", "night", "dawn", "grey", "blue", "custom"],
+    },
     temp: { type: "number" },
+    size: { type: "number" },
     weathertype: {
       type: "string",
       enum: ["clear", "cloudy", "rainy", "snowy", "windy"],
     },
+    ringColor: {
+      type: "object",
+      properties: {
+        outer: { type: "string" },
+        middle: { type: "string" },
+        inner: { type: "string" },
+      },
+    },
+    timeColor: { type: "string" },
     time: { type: "string" },
   },
-  required: ["title", "isDay", "temp", "weathertype", "time"],
+  required: ["title", "daytype", "temp", "weathertype", "time"],
 };
 
-export default {
-  shapeSize: 100,
+const weather = {
+  shapeSize: 200,
   shapePayload: schema,
   shapeBuilder: shapeBuilder,
 };
+export default weather;
 function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
+  if (!document.getElementById("weather-style")) {
+    let style = document.createElement("style");
+    style.innerHTML = `.ss1,
+  .ss2 {
+    animation: sun-rays 4s infinite;
+  }
+  @keyframes sun-rays {
+    0% {
+      r: 10px;
+    }
+    50% {
+      r: 11px;
+    }
+    100% {
+      r: 10px;
+    }
+  }`;
+    style.id = "weather-style";
+    document.head.appendChild(style);
+  }
+
   let color = "#2f3475";
   let raincloudCol = "rgb(182,182,182)";
   let raindrop = "rgb(86,111,151)";
   let snowCol = "rgb(255,255,255";
   let wind = "rgba(254,254,254,0.8)";
-  if (data.payload?.weathertype === "clear") {
-    if (data.payload?.isDay) {
-      color = "#ffa333";
-    } else {
-      color = "#2f3475";
-    }
-  } else if (data.payload?.weathertype === "cloudy") {
-    if (data.payload?.isDay) {
-      color = "#ffa333";
-    } else {
-      color = "#2f3475";
-    }
-  } else if (data.payload?.weathertype === "rainy") {
-    if (data.payload?.isDay) {
+
+  switch (data.payload?.daytype) {
+    case "day":
       color = "#ffa333";
       raincloudCol = "rgba(254,254,254,0.8)";
       raindrop = "rgba(119,170,255,0.8)";
-    } else {
+      snowCol = "rgba(255,255,255, 0.8)";
+      wind = "rgba(254,254,254,0.6)";
+      break;
+    case "night":
       color = "#2f3475";
       raincloudCol = "#F0F0F0";
       raindrop = "rgba(0,255,255, 0.6)";
-    }
-  } else if (data.payload?.weathertype === "snowy") {
-    if (data.payload.isDay) {
-      color = "#ffa333";
-      snowCol = "rgba(255,255,255, 0.8)";
-    } else {
-      color = "#2f3475";
       snowCol = "rgba(255,255,255, 0.5)";
-    }
-  } else if (data.payload?.weathertype === "windy") {
-    if (data.payload.isDay) {
-      color = "#ffa333";
-      raincloudCol = "rgba(254,254,254,0.8)";
-      wind = "rgba(254,254,254,0.6)";
-    } else {
-      color = "#2f3475";
-      raincloudCol = "#F0F0F0";
       wind = "rgba(254,254,254,0.4)";
-    }
+      break;
+    case "dawn":
+      color = "#47354b";
+      raincloudCol = "rgba(254,254,254,0.8)";
+      raindrop = "rgba(53,116,220,0.7)";
+      snowCol = "rgba(255,255,255, 0.8)";
+      wind = "rgba(254,254,254,0.6)";
+      break;
+    case "grey":
+      color = "#808080";
+      raincloudCol = "rgba(254,254,254,0.8)";
+      raindrop = "rgba(53,116,220,0.8)";
+      snowCol = "rgba(255,255,255, 0.8)";
+      wind = "rgba(254,254,254,0.6)";
+      break;
+    case "blue":
+      color = "#50b8e7";
+      raincloudCol = "rgba(254,254,254,0.8)";
+      raindrop = "rgba(119,170,255,0.8)";
+      snowCol = "rgba(255,255,255, 0.8)";
+      wind = "rgba(254,254,254,0.6)";
+      break;
+    case "custom":
+      color = data.payload.ringColor.outer;
+      raincloudCol = "rgba(254,254,254,0.8)";
+      raindrop = "rgba(119,170,255,0.8)";
+      snowCol = "rgba(255,255,255, 0.8)";
+      wind = "rgba(254,254,254,0.6)";
+      break;
   }
+
+  weather.shapeSize = data.payload?.size || 200;
 
   const shape = TAPI.SVGShape(`
     <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
@@ -125,6 +173,12 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
             <path class="themeReactive" style="stroke:none; transform:scale(0.5)" d="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z" />
           </g>
         `);
+
+  const sunset = TAPI.SVGShape(` 
+    <g transform="translate(28,69.5)">
+    <path class="themeReactive" style="stroke:none; transform:scale(0.5)" d="M3,12H7A5,5 0 0,1 12,7A5,5 0 0,1 17,12H21A1,1 0 0,1 22,13A1,1 0 0,1 21,14H3A1,1 0 0,1 2,13A1,1 0 0,1 3,12M5,16H19A1,1 0 0,1 20,17A1,1 0 0,1 19,18H5A1,1 0 0,1 4,17A1,1 0 0,1 5,16M17,20A1,1 0 0,1 18,21A1,1 0 0,1 17,22H7A1,1 0 0,1 6,21A1,1 0 0,1 7,20H17M15,12A3,3 0 0,0 12,9A3,3 0 0,0 9,12H15M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,6.65C6.9,7.16 6.36,7.78 5.94,8.5C5.5,9.24 5.25,10 5.11,10.79L3.34,7M20.65,7L18.88,10.79C18.74,10 18.47,9.23 18.05,8.5C17.63,7.78 17.1,7.15 16.5,6.64L20.65,7Z" /> 
+    </g>`);
+
   const sun = TAPI.SVGShape(`
     <g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
     <g transform="matrix(1,0,0,1,-0.692585,9.18229)">
@@ -171,7 +225,7 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
             <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
             </clipPath>
             <g clip-path="url(#moon1)">
-            <circle class="sun" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
+            <circle class="moon" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
             </g>
             </g>
             </g>`);
@@ -200,6 +254,159 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
         </g>
     </g>
     </g>
+</g>
+</g>`);
+
+  const dawn = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
+<g transform="matrix(1,0,0,1,-0.692585,9.18229)">
+    <clipPath id="dawn1">
+        <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
+        </clipPath>
+        <g clip-path="url(#dawn1)">
+        <circle class="dawn" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
+        </g>
+        </g>
+        </g>`);
+
+  const dawnShadow1 = TAPI.SVGShape(`
+        <g transform="matrix(1,0,0,1,-1.9982,-3.1145)">
+<g transform="matrix(2.7927,0,0,2.7927,-92.0894,-64.5575)">
+  <clipPath id="dawnshadow1">
+  <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+  </clipPath>
+  <g clip-path="url(#dawnshadow1)">
+      <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:#e18957;fill-opacity:1; stroke:none;"/>
+  </g>
+</g>
+</g>`);
+
+  const dawnShadow2 = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-2.4057,-3.0469)">
+      <g transform="matrix(3.57224,0,0,3.57224,-131.086,-96.3764)">
+          <clipPath id="dawnshadow21">
+              <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+          </clipPath>
+          <g clip-path="url(#dawnshadow21)">
+              <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:#b24342;fill-opacity:1;stroke:none;"/>
+          </g>
+      </g>
+  </g>
+  </g>
+</g>
+</g>`);
+
+  const grey = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
+<g transform="matrix(1,0,0,1,-0.692585,9.18229)">
+    <clipPath id="grey1">
+        <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
+        </clipPath>
+        <g clip-path="url(#grey1)">
+        <circle class="grey" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
+        </g>
+        </g>
+        </g>`);
+  const greyShadow1 = TAPI.SVGShape(`
+        <g transform="matrix(1,0,0,1,-1.9982,-3.1145)">
+<g transform="matrix(2.7927,0,0,2.7927,-92.0894,-64.5575)">
+  <clipPath id="greyshadow1">
+  <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+  </clipPath>
+  <g clip-path="url(#greyshadow1)">
+      <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:#a6a6a6;fill-opacity:1; stroke:none;"/>
+  </g>
+</g>
+</g>`);
+
+  const greyShadow2 = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-2.4057,-3.0469)">
+      <g transform="matrix(3.57224,0,0,3.57224,-131.086,-96.3764)">
+          <clipPath id="greyshadow21">
+              <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+          </clipPath>
+          <g clip-path="url(#greyshadow21)">
+              <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:#999999;fill-opacity:1;stroke:none;"/>
+          </g>
+      </g>
+  </g>
+  </g>
+</g>
+</g>`);
+
+  const blue = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
+<g transform="matrix(1,0,0,1,-0.692585,9.18229)">
+    <clipPath id="blue1">
+        <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
+        </clipPath>
+        <g clip-path="url(#blue1)">
+        <circle class="blue" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
+        </g>
+        </g>
+        </g>`);
+  const blueShadow1 = TAPI.SVGShape(`
+        <g transform="matrix(1,0,0,1,-1.9982,-3.1145)">
+<g transform="matrix(2.7927,0,0,2.7927,-92.0894,-64.5575)">
+  <clipPath id="blueshadow1">
+  <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+  </clipPath>
+  <g clip-path="url(#blueshadow1)">
+      <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:#b9e2f5;fill-opacity:1; stroke:none;"/>
+  </g>
+</g>
+</g>`);
+
+  const blueShadow2 = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-2.4057,-3.0469)">
+      <g transform="matrix(3.57224,0,0,3.57224,-131.086,-96.3764)">
+          <clipPath id="blueshadow21">
+              <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+          </clipPath>
+          <g clip-path="url(#blueshadow21)">
+              <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:#84cdee;fill-opacity:1;stroke:none;"/>
+          </g>
+      </g>
+  </g>
+  </g>
+</g>
+</g>`);
+
+  const custom = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-3.9982,-3.6536)">
+<g transform="matrix(1,0,0,1,-0.692585,9.18229)">
+    <clipPath id="custom1">
+        <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
+        </clipPath>
+        <g clip-path="url(#custom1)">
+        <circle class="grey" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe646;fill-opacity:1;stroke:none;"/>
+        </g>
+        </g>
+        </g>`);
+  const customShadow1 = TAPI.SVGShape(`
+        <g transform="matrix(1,0,0,1,-1.9982,-3.1145)">
+<g transform="matrix(2.7927,0,0,2.7927,-92.0894,-64.5575)">
+  <clipPath id="customshadow1">
+  <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+  </clipPath>
+  <g clip-path="url(#customshadow1)">
+      <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:${data.payload?.ringColor?.inner};fill-opacity:1; stroke:none;"/>
+  </g>
+</g>
+</g>`);
+
+  const customShadow2 = TAPI.SVGShape(`
+<g transform="matrix(1,0,0,1,-2.4057,-3.0469)">
+      <g transform="matrix(3.57224,0,0,3.57224,-131.086,-96.3764)">
+          <clipPath id="customshadow21">
+              <rect x="37.568" y="26.751" width="26.249" height="14.066"/>
+          </clipPath>
+          <g clip-path="url(#customshadow21)">
+              <circle class="ss2" cx="50.693" cy="40.876" r="9.124" style="fill:${data.payload?.ringColor?.middle};fill-opacity:1;stroke:none;"/>
+          </g>
+      </g>
+  </g>
+  </g>
 </g>
 </g>`);
 
@@ -562,9 +769,6 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
       TAPI.ShapeStyle("stroke-width", "0"),
       TAPI.ShapeStyle("font-weight", "600"),
       TAPI.ShapeStyle("class", "themeReactive"),
-
-      //   TAPI.ShapeStyle("fill", "#1a1a1a", TAPI.isLight(data.payload?.color)),
-      //   TAPI.ShapeStyle("fill", "#ffffff", TAPI.isDark(data.payload?.color)),
       TAPI.ShapeStyle("color", "#1a1a1a"),
       TAPI.ShapeStyle("font-size", "10", true),
     ]
@@ -574,12 +778,11 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
     data.payload?.time.toString() ?? "",
     TAPI.CollectionStyle(100, 95, 0, 35, 10, 10, 2, TAPI.Alignment.Center),
     [
-      TAPI.ShapeStyle("font-weight", "400"),
+      TAPI.ShapeStyle("font-weight", "600"),
       TAPI.ShapeStyle("stroke-width", "0"),
-      TAPI.ShapeStyle("class", "gly_text.white"),
-      TAPI.ShapeStyle("color", "#1a1a1a"),
       TAPI.ShapeStyle("font-size", "10", true),
       TAPI.ShapeStyle("text-shadow", "0.8px 0.8px 0.1px rgb(80, 80, 80)"),
+      TAPI.ShapeStyle("fill", data.payload?.timeColor || "#FFFFFF"),
     ]
   );
 
@@ -595,75 +798,172 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
     ]
   );
 
-  if (data.payload?.isDay) {
-    if (data.payload?.weathertype === "clear") {
+  switch (data.payload?.daytype) {
+    case "day":
       shape.append(() => sunShadow2.node());
       shape.append(() => sunShadow1.node());
       shape.append(() => sun.node());
-      shape.append(() => sunny.node());
-    } else if (data.payload?.weathertype === "rainy") {
-      shape.append(() => sunShadow2.node());
-      shape.append(() => sunShadow1.node());
-      shape.append(() => sun.node());
-      shape.append(() => rainDrops.node());
-      shape.append(() => rainDrops2.node());
-      shape.append(() => rainy.node());
-    } else if (data.payload?.weathertype === "cloudy") {
-      shape.append(() => sunShadow2.node());
-      shape.append(() => sunShadow1.node());
-      shape.append(() => sun.node());
-      shape.append(() => cloud.node());
-      shape.append(() => cloud2.node());
-      shape.append(() => cloudy.node());
-    } else if (data.payload?.weathertype === "snowy") {
-      shape.append(() => sunShadow2.node());
-      shape.append(() => sunShadow1.node());
-      shape.append(() => sun.node());
-      shape.append(() => snow.node());
-      shape.append(() => snowy.node());
-    } else if (data.payload.weathertype === "windy") {
-      shape.append(() => windy.node());
-      shape.append(() => sunShadow2.node());
-      shape.append(() => sunShadow1.node());
-      shape.append(() => sun.node());
-      shape.append(() => windyCloud.node());
-      shape.append(() => windyCloud2.node());
-    }
-  } else {
-    if (data.payload?.weathertype === "clear") {
-      shape.append(() => night.node());
+      break;
+    case "night":
       shape.append(() => moonShadow2.node());
       shape.append(() => moonShadow1.node());
       shape.append(() => moon.node());
-    } else if (data.payload?.weathertype === "rainy") {
-      shape.append(() => rainy.node());
-      shape.append(() => moonShadow2.node());
-      shape.append(() => moonShadow1.node());
-      shape.append(() => moon.node());
-      shape.append(() => rainDrops.node());
-      shape.append(() => rainDrops2.node());
-    } else if (data.payload?.weathertype === "cloudy") {
-      shape.append(() => moonShadow2.node());
-      shape.append(() => moonShadow1.node());
-      shape.append(() => moon.node());
-      shape.append(() => cloudy.node());
-      shape.append(() => cloud.node());
-      shape.append(() => cloud2.node());
-    } else if (data.payload?.weathertype === "snowy") {
-      shape.append(() => snowy.node());
-      shape.append(() => moonShadow2.node());
-      shape.append(() => moonShadow1.node());
-      shape.append(() => moon.node());
-      shape.append(() => snow.node());
-    } else if (data.payload?.weathertype === "windy") {
-      shape.append(() => windy.node());
-      shape.append(() => moonShadow2.node());
-      shape.append(() => moonShadow1.node());
-      shape.append(() => moon.node());
-      shape.append(() => windyCloud.node());
-      shape.append(() => windyCloud2.node());
-    }
+      break;
+    case "dawn":
+      shape.append(() => dawnShadow2.node());
+      shape.append(() => dawnShadow1.node());
+      shape.append(() => dawn.node());
+      break;
+    case "grey":
+      shape.append(() => greyShadow2.node());
+      shape.append(() => greyShadow1.node());
+      shape.append(() => grey.node());
+      break;
+    case "blue":
+      shape.append(() => blueShadow2.node());
+      shape.append(() => blueShadow1.node());
+      shape.append(() => blue.node());
+      break;
+    case "custom":
+      shape.append(() => customShadow2.node());
+      shape.append(() => customShadow1.node());
+      shape.append(() => custom.node());
+      break;
   }
+
+  switch (data.payload?.weathertype) {
+    case "clear":
+      if (data.payload?.daytype == "night") {
+        shape.append(() => night.node());
+      } else if (data.payload?.daytype == "dawn") {
+        shape.append(() => sunset.node());
+      } else shape.append(() => sunny.node());
+
+      break;
+    case "rainy":
+      shape.append(() => rainDrops.node());
+      shape.append(() => rainDrops2.node());
+      shape.append(() => rainy.node());
+      break;
+    case "cloudy":
+      shape.append(() => cloud.node());
+      shape.append(() => cloud2.node());
+      shape.append(() => cloudy.node());
+      break;
+    case "snowy":
+      shape.append(() => snow.node());
+      shape.append(() => snowy.node());
+      break;
+    case "windy":
+      shape.append(() => windy.node());
+      shape.append(() => windyCloud.node());
+      shape.append(() => windyCloud2.node());
+      break;
+  }
+
+  //   if (data.payload?.daytype == "day") {
+  //     if (data.payload?.weathertype === "clear") {
+  //       shape.append(() => sunShadow2.node());
+  //       shape.append(() => sunShadow1.node());
+  //       shape.append(() => sun.node());
+  //       shape.append(() => sunny.node());
+  //     } else if (data.payload?.weathertype === "rainy") {
+  //       shape.append(() => sunShadow2.node());
+  //       shape.append(() => sunShadow1.node());
+  //       shape.append(() => sun.node());
+  //       shape.append(() => rainDrops.node());
+  //       shape.append(() => rainDrops2.node());
+  //       shape.append(() => rainy.node());
+  //     } else if (data.payload?.weathertype === "cloudy") {
+  //       shape.append(() => sunShadow2.node());
+  //       shape.append(() => sunShadow1.node());
+  //       shape.append(() => sun.node());
+  //       shape.append(() => cloud.node());
+  //       shape.append(() => cloud2.node());
+  //       shape.append(() => cloudy.node());
+  //     } else if (data.payload?.weathertype === "snowy") {
+  //       shape.append(() => sunShadow2.node());
+  //       shape.append(() => sunShadow1.node());
+  //       shape.append(() => sun.node());
+  //       shape.append(() => snow.node());
+  //       shape.append(() => snowy.node());
+  //     } else if (data.payload.weathertype === "windy") {
+  //       shape.append(() => windy.node());
+  //       shape.append(() => sunShadow2.node());
+  //       shape.append(() => sunShadow1.node());
+  //       shape.append(() => sun.node());
+  //       shape.append(() => windyCloud.node());
+  //       shape.append(() => windyCloud2.node());
+  //     }
+  //   } else if (data.payload?.daytype === "night") {
+  //     if (data.payload?.weathertype === "clear") {
+  //       shape.append(() => night.node());
+  //       shape.append(() => moonShadow2.node());
+  //       shape.append(() => moonShadow1.node());
+  //       shape.append(() => moon.node());
+  //     } else if (data.payload?.weathertype === "rainy") {
+  //       shape.append(() => rainy.node());
+  //       shape.append(() => moonShadow2.node());
+  //       shape.append(() => moonShadow1.node());
+  //       shape.append(() => moon.node());
+  //       shape.append(() => rainDrops.node());
+  //       shape.append(() => rainDrops2.node());
+  //     } else if (data.payload?.weathertype === "cloudy") {
+  //       shape.append(() => moonShadow2.node());
+  //       shape.append(() => moonShadow1.node());
+  //       shape.append(() => moon.node());
+  //       shape.append(() => cloudy.node());
+  //       shape.append(() => cloud.node());
+  //       shape.append(() => cloud2.node());
+  //     } else if (data.payload?.weathertype === "snowy") {
+  //       shape.append(() => snowy.node());
+  //       shape.append(() => moonShadow2.node());
+  //       shape.append(() => moonShadow1.node());
+  //       shape.append(() => moon.node());
+  //       shape.append(() => snow.node());
+  //     } else if (data.payload?.weathertype === "windy") {
+  //       shape.append(() => windy.node());
+  //       shape.append(() => moonShadow2.node());
+  //       shape.append(() => moonShadow1.node());
+  //       shape.append(() => moon.node());
+  //       shape.append(() => windyCloud.node());
+  //       shape.append(() => windyCloud2.node());
+  //     }
+  //   } else if (data.payload?.daytype == "dawn") {
+  //     if (data.payload?.weathertype === "clear") {
+  //       shape.append(() => dawnShadow2.node());
+  //       shape.append(() => dawnShadow1.node());
+  //       shape.append(() => dawn.node());
+  //     } else if (data.payload?.weathertype === "rainy") {
+  //       shape.append(() => rainy.node());
+  //       shape.append(() => dawnShadow2.node());
+  //       shape.append(() => dawnShadow1.node());
+  //       shape.append(() => dawn.node());
+  //       shape.append(() => rainDrops.node());
+  //       shape.append(() => rainDrops2.node());
+  //     } else if (data.payload?.weathertype === "cloudy") {
+  //       shape.append(() => dawnShadow2.node());
+  //       shape.append(() => dawnShadow1.node());
+  //       shape.append(() => dawn.node());
+  //       shape.append(() => cloudy.node());
+  //       shape.append(() => cloud.node());
+  //       shape.append(() => cloud2.node());
+  //     } else if (data.payload?.weathertype === "snowy") {
+  //       shape.append(() => snowy.node());
+  //       shape.append(() => dawnShadow2.node());
+  //       shape.append(() => dawnShadow1.node());
+  //       shape.append(() => dawn.node());
+  //       shape.append(() => snow.node());
+  //     } else if (data.payload?.weathertype === "windy") {
+  //       shape.append(() => windy.node());
+  //       shape.append(() => dawnShadow2.node());
+  //       shape.append(() => dawnShadow1.node());
+  //       shape.append(() => dawn.node());
+  //       shape.append(() => windyCloud.node());
+  //       shape.append(() => windyCloud2.node());
+  //     }
+  //   }
+
   shape.append(() => time.node());
   shape.append(() => temp.node());
   shape.append(() => title.node());
