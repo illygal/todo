@@ -30,7 +30,7 @@ function shapeBuilder(data: Node<Payload>, TAPI: typeof TemplateAPI) {
     TAPI.SVGShape(` <g transform="matrix(1,0,0,1,0.501313,0.501313)"  id="dicShape">
 <g transform="matrix(1,0,0,1,-3.08213,-3.08213)">
     <g transform="matrix(0.928357,0,0,0.928357,3.08213,3.08213)">
-        <circle cx="50" cy="50" r="50" style="fill:#1a1a1a;stroke:#1a1a1a;stroke-width:5px;"/>
+        <circle cx="50" cy="50" r="50" style="fill:${data.payload?.color};stroke:${data.payload?.color};stroke-width:5px;"/>
         <clipPath id="roundedImg"><circle cx="50" cy="50" r="50"/></clipPath>
         <image id="image" clip-path="url(#roundedImg)" width="100" height="100"/>
     </g>
@@ -40,7 +40,7 @@ function shapeBuilder(data: Node<Payload>, TAPI: typeof TemplateAPI) {
   const textfield = TAPI.SVGShape(`
 <g transform="matrix(1,0,0,1,-3,22)">
         <g transform="matrix(1.09033,0,0,0.988613,-12.0909,43.7424)">
-            <path d="M92.591,33.502C92.591,31.16 90.867,29.259 88.744,29.259L25.15,29.259C23.027,29.259 21.304,31.16 21.304,33.502L21.304,41.986C21.304,44.328 23.027,46.229 25.15,46.229L88.744,46.229C90.867,46.229 92.591,44.328 92.591,41.986L92.591,33.502Z" style="fill:#1a1a1a; stroke:none;"/>
+            <path d="M92.591,33.502C92.591,31.16 90.867,29.259 88.744,29.259L25.15,29.259C23.027,29.259 21.304,31.16 21.304,33.502L21.304,41.986C21.304,44.328 23.027,46.229 25.15,46.229L88.744,46.229C90.867,46.229 92.591,44.328 92.591,41.986L92.591,33.502Z" style="fill:${data.payload?.color}; stroke:none;"/>
         </g>
     </g>
 `);
@@ -62,7 +62,10 @@ function shapeBuilder(data: Node<Payload>, TAPI: typeof TemplateAPI) {
       TAPI.ShapeStyle("stroke-width", "0"),
       TAPI.ShapeStyle("font-weight", "600"),
       TAPI.ShapeStyle("class", "themeReactive"),
-      TAPI.ShapeStyle("fill", data.payload?.color ?? "#1a1a1a"),
+      TAPI.ShapeStyle(
+        "fill",
+        data.payload?.color == "#FFFFFF" ? "#1a1a1a" : "#FFFFFF"
+      ),
       TAPI.ShapeStyle("font-size", "6", true),
     ]
   );
@@ -84,7 +87,10 @@ function shapeBuilder(data: Node<Payload>, TAPI: typeof TemplateAPI) {
       TAPI.ShapeStyle("stroke-width", "0"),
       TAPI.ShapeStyle("font-weight", "600"),
       TAPI.ShapeStyle("class", "themeReactive"),
-      TAPI.ShapeStyle("fill", data.payload?.color ?? "#1a1a1a"),
+      TAPI.ShapeStyle(
+        "fill",
+        data.payload?.color == "#FFFFFF" ? "#1a1a1a" : "#FFFFFF"
+      ),
       TAPI.ShapeStyle("font-size", "5", true),
     ]
   );

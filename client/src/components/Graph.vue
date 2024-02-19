@@ -148,7 +148,7 @@ function renderGraph() {
       },
 
       payload: {
-        label: "Mount Everest",
+        label: "MountEverestkrasseyblabliblubtestundsooders",
         description:
           "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis, possimus?",
         color: statusColor.value,
