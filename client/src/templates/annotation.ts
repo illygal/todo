@@ -16,7 +16,7 @@ const schema = {
 };
 
 export default {
-  shapeSize: 100,
+  shapeSize: 300,
   shapePayload: schema,
   shapeBuilder: shapeBuilder,
 };

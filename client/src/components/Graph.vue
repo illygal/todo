@@ -9,6 +9,7 @@ import Checkmark from "../templates/checkmark";
 import Weather, { type Schema as WeatherSchema } from "../templates/weather";
 import Annotation from "../templates/annotation";
 import dictionary from "../templates/dictionary";
+import * as crypto from "crypto";
 
 const emit = defineEmits(["toggle"]);
 const props = defineProps<{ todos: TODOItem[] }>();
@@ -19,11 +20,12 @@ const temperature = ref("0");
 const daytime = ref("day");
 const modi = ref("light");
 const timeColor = ref("#FFFFFF");
-const weathertype = ref<"clear" | "cloudy" | "rainy" | "snowy" | "windy">(
-  "clear"
-);
+const weathertype = ref<
+  "clear" | "cloudy" | "rainy" | "snowy" | "windy" | "foggy"
+>("clear");
 const ringColor = ref({ outer: "", middle: "", inner: "" });
 const statusColor = ref("#FFFFFF");
+const showMoon = ref(false);
 
 const graph: Graph = {
   nodes: [],
@@ -96,6 +98,7 @@ function renderGraph() {
       payload: {
         title: "Birkenfeld",
         daytype: daytime.value,
+        moon: showMoon.value,
         temp: parseFloat(temperature.value),
         size: 200,
         weathertype: weathertype.value,
@@ -191,12 +194,59 @@ function renderGraph() {
         source: "dictionary",
       },
       payload: {
-        label: "Polizei",
+        label: "Eren Jaeger",
         description:
           "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis, possimus?",
         color: statusColor.value,
         svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>ambulance</title><path d="M18,18.5A1.5,1.5 0 0,0 19.5,17A1.5,1.5 0 0,0 18,15.5A1.5,1.5 0 0,0 16.5,17A1.5,1.5 0 0,0 18,18.5M19.5,9.5H17V12H21.46L19.5,9.5M6,18.5A1.5,1.5 0 0,0 7.5,17A1.5,1.5 0 0,0 6,15.5A1.5,1.5 0 0,0 4.5,17A1.5,1.5 0 0,0 6,18.5M20,8L23,12V17H21A3,3 0 0,1 18,20A3,3 0 0,1 15,17H9A3,3 0 0,1 6,20A3,3 0 0,1 3,17H1V6C1,4.89 1.89,4 3,4H17V8H20M8,6V9H5V11H8V14H10V11H13V9H10V6H8Z" /></svg>`,
         url: "https://www.wikidata.org/wiki/Q35535",
+      },
+    },
+    {
+      id: "dictionary4",
+      shape: {
+        type: "dictionary",
+        scale: 10,
+      },
+      gravity: -9000000,
+      satellite: {
+        type: "soft",
+        angle: 55,
+        distance: 5000,
+        source: "dictionary",
+      },
+      payload: {
+        label: "Cat",
+        description: "Kittycat",
+        color: statusColor.value,
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>cat</title><path d="M12,8L10.67,8.09C9.81,7.07 7.4,4.5 5,4.5C5,4.5 3.03,7.46 4.96,11.41C4.41,12.24 4.07,12.67 4,13.66L2.07,13.95L2.28,14.93L4.04,14.67L4.18,15.38L2.61,16.32L3.08,17.21L4.53,16.32C5.68,18.76 8.59,20 12,20C15.41,20 18.32,18.76 19.47,16.32L20.92,17.21L21.39,16.32L19.82,15.38L19.96,14.67L21.72,14.93L21.93,13.95L20,13.66C19.93,12.67 19.59,12.24 19.04,11.41C20.97,7.46 19,4.5 19,4.5C16.6,4.5 14.19,7.07 13.33,8.09L12,8M9,11A1,1 0 0,1 10,12A1,1 0 0,1 9,13A1,1 0 0,1 8,12A1,1 0 0,1 9,11M15,11A1,1 0 0,1 16,12A1,1 0 0,1 15,13A1,1 0 0,1 14,12A1,1 0 0,1 15,11M11,14H13L12.3,15.39C12.5,16.03 13.06,16.5 13.75,16.5A1.5,1.5 0 0,0 15.25,15H15.75A2,2 0 0,1 13.75,17C13,17 12.35,16.59 12,16V16H12C11.65,16.59 11,17 10.25,17A2,2 0 0,1 8.25,15H8.75A1.5,1.5 0 0,0 10.25,16.5C10.94,16.5 11.5,16.03 11.7,15.39L11,14Z" /></svg>`,
+        url: "",
+        symbolId: "",
+      },
+    },
+    {
+      id: "dictionary5",
+
+      shape: {
+        type: "dictionary",
+        scale: 10,
+      },
+      gravity: -9000000,
+      satellite: {
+        type: "soft",
+        angle: 55,
+        distance: 5000,
+        source: "dictionary",
+      },
+
+      payload: {
+        label: "?",
+        description:
+          "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis, possimus?",
+        color: statusColor.value,
+        svg: "",
+        url: "",
+        symbolId: "",
       },
     },
   ];
@@ -301,11 +351,29 @@ function changeDay(
 }
 
 function changeWeatherType(
-  weather: "clear" | "rainy" | "cloudy" | "snowy" | "windy"
+  weather: "clear" | "rainy" | "cloudy" | "snowy" | "windy" | "foggy"
 ) {
   weathertype.value = weather;
   renderGraph();
 }
+
+function toggleShowMoon() {
+  if (showMoon.value) {
+    showMoon.value = false;
+  } else showMoon.value = true;
+
+  renderGraph();
+}
+
+function generatePassword(password: string): { salt: string; hash: string } {
+  const salt = crypto.randomBytes(32).toString("hex");
+  const hash = crypto
+    .pbkdf2Sync(password, salt, 100000, 64, "sha512")
+    .toString("hex");
+  return { salt, hash };
+}
+
+generatePassword(pw);
 </script>
 
 <template>
@@ -347,8 +415,12 @@ function changeWeatherType(
       <button id="cloudy" @click="changeWeatherType('cloudy')">☁️</button>
       <button id="sunny" @click="changeWeatherType('clear')">☀️</button>
       <button id="rainy" @click="changeWeatherType('rainy')">🌧️</button>
-      <button id="rainy" @click="changeWeatherType('snowy')">🌨️</button>
-      <button id="rainy" @click="changeWeatherType('windy')">💨</button>
+      <button id="snowy" @click="changeWeatherType('snowy')">🌨️</button>
+      <button id="windy" @click="changeWeatherType('windy')">💨</button>
+      <button id="foggy" @click="changeWeatherType('foggy')">🌫️</button>
+    </div>
+    <div>
+      <button id="moon" @click="toggleShowMoon()">🌝</button>
     </div>
     <div>
       <button id="day" @click="changeDay('day')">Tag</button>

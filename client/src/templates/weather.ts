@@ -3,9 +3,10 @@ import type { Node, TemplateAPI } from "@livereader/graphly-d3";
 export type Schema = {
   title: string;
   daytype: "day" | "night" | "dawn" | "grey" | "blue" | "custom";
+  moon?: boolean;
   temp: number;
   size: number;
-  weathertype: "clear" | "cloudy" | "rainy" | "snowy" | "windy";
+  weathertype: "clear" | "cloudy" | "rainy" | "snowy" | "windy" | "foggy";
   ringColor: {
     outer: string;
     middle: string;
@@ -23,11 +24,12 @@ const schema = {
       type: "string",
       enum: ["day", "night", "dawn", "grey", "blue", "custom"],
     },
+    moon: { type: "boolean" },
     temp: { type: "number" },
     size: { type: "number" },
     weathertype: {
       type: "string",
-      enum: ["clear", "cloudy", "rainy", "snowy", "windy"],
+      enum: ["clear", "cloudy", "rainy", "snowy", "windy", "foggy"],
     },
     ringColor: {
       type: "object",
@@ -44,7 +46,7 @@ const schema = {
 };
 
 const weather = {
-  shapeSize: 200,
+  shapeSize: 300,
   shapePayload: schema,
   shapeBuilder: shapeBuilder,
 };
@@ -186,7 +188,9 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
             <rect x="41.568" y="31.751" width="26.249" height="9.066"/>
             </clipPath>
             <g clip-path="url(#sun1)">
-            <circle class="sun" cx="52.693" cy="42.876" r="11.124" style="fill:#ffe65c;fill-opacity:1;stroke:none;"/>
+            <circle class="sun" cx="52.693" cy="42.876" r="11.124" style="fill:${
+              data.payload?.moon ? "#F6F1D5" : "#ffe65c"
+            };fill-opacity:1;stroke:none;"/>
             </g>
             </g>
             </g>`);
@@ -759,7 +763,41 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
 </g>
 </g>
 
+`);
 
+  const fog = TAPI.SVGShape(`
+  
+  <g transform="matrix(1,0,0,1,-3,-23)">
+
+        <g transform="matrix(1.14822,0,0,1.14822,3.20444,3.79332)">
+            <path d="M33.775,36.799C33.775,36.618 33.628,36.471 33.447,36.471L9.647,36.471C9.466,36.471 9.319,36.618 9.319,36.799L9.319,37.455C9.319,37.636 9.466,37.783 9.647,37.783L33.447,37.783C33.628,37.783 33.775,37.636 33.775,37.455L33.775,36.799Z" style="fill:rgb(231,232,233); stroke: none; opacity: 0.7"/>
+        </g>
+        <g transform="matrix(1.06709,0,0,1.14822,7.53593,3.79332)">
+            <path d="M53.387,42.445C53.387,42.258 53.223,42.105 53.021,42.105L23.956,42.105C23.754,42.105 23.59,42.258 23.59,42.445L23.59,43.126C23.59,43.314 23.754,43.467 23.956,43.467L53.021,43.467C53.223,43.467 53.387,43.314 53.387,43.126L53.387,42.445Z" style="fill:rgb(231,232,233);stroke: none;opacity: 0.7"/>
+        </g>
+        <g transform="matrix(1.14822,0,0,1.14822,3.20444,3.79332)">
+            <path d="M72.191,36.799C72.191,36.618 72.044,36.471 71.863,36.471L50.328,36.471C50.147,36.471 50,36.618 50,36.799L50,37.455C50,37.636 50.147,37.783 50.328,37.783L71.863,37.783C72.044,37.783 72.191,37.636 72.191,37.455L72.191,36.799Z" style="fill:rgb(231,232,233);stroke: none; opacity: 0.7"/>
+        </g>
+        <g transform="matrix(1.14822,0,0,1.14822,-29.4662,-3.08165)">
+            <path d="M72.191,36.799C72.191,36.618 72.044,36.471 71.863,36.471L50.328,36.471C50.147,36.471 50,36.618 50,36.799L50,37.455C50,37.636 50.147,37.783 50.328,37.783L71.863,37.783C72.044,37.783 72.191,37.636 72.191,37.455L72.191,36.799Z" style="fill:rgb(231,232,233);stroke: none; opacity: 0.7"/>
+        </g>
+        <g transform="matrix(1.14822,0,0,1.14822,-9.53554,17.8216)">
+            <path d="M72.191,36.799C72.191,36.618 72.044,36.471 71.863,36.471L50.328,36.471C50.147,36.471 50,36.618 50,36.799L50,37.455C50,37.636 50.147,37.783 50.328,37.783L71.863,37.783C72.044,37.783 72.191,37.636 72.191,37.455L72.191,36.799Z" style="fill:rgb(231,232,233);stroke: none; opacity: 0.7"/>
+        </g>
+        <g transform="matrix(0.677795,0,0,1.14822,-8.24577,17.0689)">
+            <path d="M72.191,36.799C72.191,36.618 71.942,36.471 71.636,36.471L50.555,36.471C50.249,36.471 50,36.618 50,36.799L50,37.455C50,37.636 50.249,37.783 50.555,37.783L71.636,37.783C71.942,37.783 72.191,37.636 72.191,37.455L72.191,36.799Z" style="fill:rgb(231,232,233);stroke: none; opacity: 0.7"/>
+        </g>
+        <g transform="matrix(0.677795,0,0,1.14822,30.6153,-2.32894)">
+            <path d="M72.191,36.799C72.191,36.618 71.942,36.471 71.636,36.471L50.555,36.471C50.249,36.471 50,36.618 50,36.799L50,37.455C50,37.636 50.249,37.783 50.555,37.783L71.636,37.783C71.942,37.783 72.191,37.636 72.191,37.455L72.191,36.799Z" style="fill:rgb(231,232,233);stroke: none; opacity: 0.7"/>
+        </g>
+    </g>
+</g>
+`);
+
+  const foggy = TAPI.SVGShape(`
+  <g transform="translate(28,69.5)">
+<path class="themeReactive" style="stroke:none;transform:scale(0.5)" d="M3,15H13A1,1 0 0,1 14,16A1,1 0 0,1 13,17H3A1,1 0 0,1 2,16A1,1 0 0,1 3,15M16,15H21A1,1 0 0,1 22,16A1,1 0 0,1 21,17H16A1,1 0 0,1 15,16A1,1 0 0,1 16,15M1,12A5,5 0 0,1 6,7C7,4.65 9.3,3 12,3C15.43,3 18.24,5.66 18.5,9.03L19,9C21.19,9 22.97,10.76 23,13H21A2,2 0 0,0 19,11H17V10A5,5 0 0,0 12,5C9.5,5 7.45,6.82 7.06,9.19C6.73,9.07 6.37,9 6,9A3,3 0 0,0 3,12C3,12.35 3.06,12.69 3.17,13H1.1L1,12M3,19H5A1,1 0 0,1 6,20A1,1 0 0,1 5,21H3A1,1 0 0,1 2,20A1,1 0 0,1 3,19M8,19H21A1,1 0 0,1 22,20A1,1 0 0,1 21,21H8A1,1 0 0,1 7,20A1,1 0 0,1 8,19Z" />
+</g>
 `);
 
   const title = TAPI.TextCollection(
@@ -807,27 +845,36 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
     case "night":
       shape.append(() => moonShadow2.node());
       shape.append(() => moonShadow1.node());
-      shape.append(() => moon.node());
+      shape.append(() => sun.node());
+
       break;
     case "dawn":
       shape.append(() => dawnShadow2.node());
       shape.append(() => dawnShadow1.node());
       shape.append(() => dawn.node());
+      shape.append(() => sun.node());
+
       break;
     case "grey":
       shape.append(() => greyShadow2.node());
       shape.append(() => greyShadow1.node());
       shape.append(() => grey.node());
+      shape.append(() => sun.node());
+
       break;
     case "blue":
       shape.append(() => blueShadow2.node());
       shape.append(() => blueShadow1.node());
       shape.append(() => blue.node());
+      shape.append(() => sun.node());
+
       break;
     case "custom":
       shape.append(() => customShadow2.node());
       shape.append(() => customShadow1.node());
       shape.append(() => custom.node());
+      shape.append(() => sun.node());
+
       break;
   }
 
@@ -858,6 +905,10 @@ function shapeBuilder(data: Node<Schema>, TAPI: typeof TemplateAPI) {
       shape.append(() => windy.node());
       shape.append(() => windyCloud.node());
       shape.append(() => windyCloud2.node());
+      break;
+    case "foggy":
+      shape.append(() => foggy.node());
+      shape.append(() => fog.node());
       break;
   }
 
