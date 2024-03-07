@@ -7,4 +7,14 @@ export default defineConfig({
   build: {
     minify: false,
   },
+  server: {
+    proxy: {
+      "/API": {
+        target: "https://www.wikidata.org",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace("/API", ""),
+      },
+    },
+  },
 });
